@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block content %}
+    <title>Detail</title>
+  <body>
+    <div class="container" style="text-align: center;">
+        <h1>{{ blog.title }}</h1>
+        <p>유저: {{blog.user.username}}</p>
+        <p>{{ blog.pub_date }}</p>
+        <p>{{ blog.body }}</p>
+        {% if blog.image %}
+        <p><img src="{{blog.image.url}}" alt="" style="text-align: center;"/></p>
+        {% endif %}
+        {% if blog.user == user %}
+        <a href="{% url 'blog:update' blog.id %}">수정하기</a>
+            <a href="{% url 'blog:delete' blog.id%}">Delete Post</a>
+        {% endif %}
+        <a href="{% url 'home' %}">돌아가기</a>
+        <form method="POST" action="/blog/newreply">
+          {% csrf_token %}
+          <input type="hidden" value="{{blog.id}}" name="blog" />
+          <input type="hidden" value="{{user.username}}" name="user" />
+          댓글 작성 : <input type="text" name="comment_body" />
+          <button type="submit" class="btn btn-secondary">작성</button>
+        </form>
+      
+        {% for comment in blog.comments.all %}
+
+        <p><span> {{comment.comment_user}} </span> : {{ comment.comment_body }}</p>
+        {% if comment.comment_user == user %}
+  <a href="{% url 'blog:replydelete' comment.id %}"
+    ><input type="button" value="delete"
+  /></a>
+  {% endif %}
+        <p>위 댓글을 단 시간 : {{comment.comment_date}}</p>
+
+        {% endfor %}
+    </div>
+  </body>
+{% endblock %}

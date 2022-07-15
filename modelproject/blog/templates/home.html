@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+    {% block content %}
+    <div class = 'block1'>
+      <header>
+        
+          {% if user.is_authenticated %}
+          <h1>Blog &nbsp;&nbsp;<a href="{% url 'blog:new' %}">
+          <img src="{% static 'before.JPEG' %}" 
+            onmouseover="this.src='{% static 'after.JPEG' %}'"
+            onmouseout="this.src='{% static 'before.JPEG' %}'" 
+            style="width: 75px; height: 75px; float: right;">
+          </a></h1>
+          {% else %}
+          <h1>Blog</h1>
+      </header>
+      
+
+      <br>
+      {% endif %}
+      {% for blog in blogs %}
+      <div class="box" style="margin-top :80px;">
+      <div class="img" style="">
+        <a href="{% url 'blog:detail' blog.id %}">
+          {% if blog.image %}
+          <img src="{{blog.image.url}}" alt="" style="float: right; width:75px; height: 75px;" >
+        </a>
+          {% else %}
+          <img src="{% static 'nosign.png' %}" alt="" style="width: 75px; height: 75px; float: right;">
+        </a>
+
+        {% endif %}
+        <div class="content">
+          <h3>{{ blog.title }}</h3>
+          <b>작성자: {{ blog.user }} / 작성내용: {{ blog.summary }} <a href="{% url 'blog:detail' blog.id %}">..더보기</a></b><br>
+         
+        </div>
+      </div>
+      {% endfor %}
+      <br>
+      <br>
+      <div class="paginator">
+        {% if blogs.has_previous %}
+        <a href="?page=1">처음</a>
+        <a href="?page={{blogs.previous_page_number}}">이전</a>
+        {% endif %}
+        <span>{{blogs.number}}</span>
+        <span>of</span>
+        <span>{{blogs.paginator.num_pages}}</span>
+        {% if blogs.has_next %}
+        <a href="?page={{blogs.next_page_number}}">다음</a>
+        <a href="?page={{blogs.paginator.num_pages}}">마지막</a>
+        {% endif %}
+      </div>
+      </div>
+    {% endblock %}

@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1 style="text-align: center;">로그인 페이지</h1>
+<form action="{% url 'account:login' %}" method="POST" style="text-align: center; vertical-align:middle;">
+  {% csrf_token %}
+  {{form.as_p}}
+  <button type="submit">로그인</button>
+</form>
+
+{% endblock %}
